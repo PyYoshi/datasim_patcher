@@ -25,23 +25,23 @@ public class DatasimPatcher implements IXposedHookZygoteInit, IXposedHookLoadPac
 	public void initZygote(StartupParam startupParam) {
 		pref = new XSharedPreferences(DatasimPatcher.class.getPackage().getName());
 	}
-	
+
 	@Override
 	public void handleLoadPackage(LoadPackageParam lpparam) throws Throwable {
 //		XposedBridge.log("Loaded app: " + lpparam.packageName);
-		try{
-			final Class<?> a = Class.forName("com.google.ads.AdView", false, lpparam.classLoader);
-			final Constructor<?> c1 = a.getConstructor(Activity.class, Class.forName("com.google.ads.AdSize", false, lpparam.classLoader), String.class);
-			XposedBridge.hookMethod(c1, new XC_MethodHook(XCallback.PRIORITY_HIGHEST) {
-				@Override
-				protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-					final String s = param.args[1].toString();
-					if(s == null || s.compareTo("320x50_mb") == 0){
-						param.args[2] = "a1501ccfd5eddab";
-					}
-				}
-			});
-		}catch(Exception e){}
+		// try{
+		// 	final Class<?> a = Class.forName("com.google.ads.AdView", false, lpparam.classLoader);
+		// 	final Constructor<?> c1 = a.getConstructor(Activity.class, Class.forName("com.google.ads.AdSize", false, lpparam.classLoader), String.class);
+		// 	XposedBridge.hookMethod(c1, new XC_MethodHook(XCallback.PRIORITY_HIGHEST) {
+		// 		@Override
+		// 		protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+		// 			final String s = param.args[1].toString();
+		// 			if(s == null || s.compareTo("320x50_mb") == 0){
+		// 				param.args[2] = "a1501ccfd5eddab";
+		// 			}
+		// 		}
+		// 	});
+		// }catch(Exception e){}
 
 		if (!lpparam.packageName.equals("com.android.providers.telephony"))
 			return;
